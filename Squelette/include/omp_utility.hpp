@@ -16,16 +16,15 @@ namespace utility {
 template <typename Random_Access_Iterator>
 requires std::random_access_iterator<Random_Access_Iterator>
 bool is_aligned_array(const Random_Access_Iterator &it) noexcept {
-  int adresse_nb = std::bit_cast<std::uintptr_t>(&*it);
-  if ((adresse_nb & std::hardware_destructive_interference_size) == 0)
-    return true;
-  return false;
+  // on cherche a verifier que l'adresse commence bien au 1er bit
+  // on passe donc le pointer en uint pour comparer avec hardware_destructive_interference_size -1
+  std::uintptr_t adresse_nb = std::bit_cast<std::uintptr_t>(&*it);
+  return (adresse_nb & (std::hardware_destructive_interference_size -1) )== 0;
 }
 
 template <typename T>
 constexpr std::size_t how_many_in_cache_line(void) noexcept {
-  // À COMPLÉTER (la valeur retournée ici n'est pas la bonne).
-  return 0;
+  return std::hardware_destructive_interference_size / sizeof(T);
 }
 
 } // namespace utility

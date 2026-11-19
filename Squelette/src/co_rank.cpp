@@ -10,7 +10,7 @@ auto co_rank = [&](std::size_t i){
             k_low = k;
             j -= delta; k += delta;
         } 
-        else if (k > 0 && j < m && B[k - 1] >= f1[j]){
+        else if (k > 0 && j < m && B[k - 1] >= A[j]){
             const std::size_t delta =(k - k_low + 1) / 2;   
             j_low = j;
             j += delta;

@@ -4,6 +4,8 @@
 #include <omp.h>
 
 #include <cstddef>
+#include <omp_algorithm.hpp>
+
 #include <cmath>
 #include <concepts>
 #include <iterator>
@@ -121,12 +123,11 @@ noexcept {
   if constexpr (std::contiguous_iterator<Input_Iterator_1> &&
                 std::contiguous_iterator<Input_Iterator_2> && 
                 std::contiguous_iterator<Output_Iterator>){
-    result = merge_array_impl( first_1, last_1, first_2, last_2, result, comp);
+    return merge_array_impl( first_1, last_1, first_2, last_2, result, comp);
   }
   else{
-    std::merge( first_1, last_1, first_2, last_2, result, comp);
+    return std::merge( first_1, last_1, first_2, last_2, result, comp);
   }
-  return result;
 }
 } // namespace omp_merge
 

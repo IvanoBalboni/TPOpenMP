@@ -37,7 +37,31 @@ merge_array_impl(Input_Random_Access_Iterator_1 first_1,
                     const size_type m, const Input_Random_Access_Iterator_2 &b,
                     const size_type n, const Compare &comp, size_type &j,
                     size_type &k) -> void {
-    // À COMPLÉTER.
+    j = std::min(i, m);
+    k = i - j;                                  // invariant : j + k == i
+    size_type k_low = 0;
+    size_type j_low = (i > n) ? i - n : 0;      // max(0, i - n) sans underflow
+    bool active = true;
+    while (active) {
+      if (j > 0 && k < n && comp(b[k], a[j - 1])) {
+      // 1re condition du lemme violée (a[j-1] > b[k]) : on diminue j
+      const size_type delta = (j - j_low + 1) / 2;   // ceil((j - j_low) / 2)
+      k_low = k;
+      j -= delta;
+      k += delta;
+      }
+      else if (k > 0 && j < m && !comp(b[k - 1], a[j])) {
+        // 2e condition du lemme violée (b[k-1] >= a[j]) : on diminue k
+        const size_type delta = (k - k_low + 1) / 2;   // ceil((k - k_low) / 2)
+        j_low = j;
+        j += delta;
+        k -= delta;
+      } 
+      else {
+        // Aucune condition violée : (j, k) est unique
+        active = false;
+      }
+    }
   };
 
   const size_type m = static_cast<size_type>(last_1 - first_1);

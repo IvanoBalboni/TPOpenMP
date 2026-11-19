@@ -11,6 +11,9 @@
 #include <iterator>
 #include <utility>
 
+#include "omp_utility.hpp"
+
+
 namespace omp_algorithm {
 
 /**
@@ -73,7 +76,19 @@ merge_array_impl(Input_Random_Access_Iterator_1 first_1,
 
   auto best_block_size = [&result, total](const int num_threads) -> size_type {
     const size_type p = static_cast<size_type>(num_threads);
-    return (total + p - 1) / p;
+    size_type block_size = (total + p - 1) / p;
+    
+    if (total != 0 && utility::is_aligned_array(result)) {
+      const size_type cache_line_elements = utility::how_many_in_cache_line<std::iter_value_t<Output_Random_Access_Iterator>>();
+      if (cache_line_elements != 0) {
+        const size_type remainder = block_size % cache_line_elements;
+        if (remainder != 0) {
+          block_size += cache_line_elements - remainder;
+        }
+      }
+    }
+
+    return block_size;
   };
 
   // Algo 1 SPMD

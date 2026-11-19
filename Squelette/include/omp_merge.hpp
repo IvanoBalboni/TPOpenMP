@@ -76,7 +76,14 @@ requires merge_precondition<Input_Iterator_1, Input_Iterator_2, Output_Iterator,
         Output_Iterator result,
         Compare comp = std::less<const std::iter_value_t<Input_Iterator_1> &>())
 noexcept {
-  // À COMPLÉTER (la valeur retournée ici n'est pas la bonne).
+  if constexpr (std::contiguous_iterator<Input_Iterator_1> &&
+                std::contiguous_iterator<Input_Iterator_2> && 
+                std::contiguous_iterator<Output_Iterator>){
+    result = merge_array_impl( first_1, last_1, first_2, last_2, result, comp);
+  }
+  else{
+    std::merge( first_1, last_1, first_2, last_2, result, comp);
+  }
   return result;
 }
 } // namespace omp_merge

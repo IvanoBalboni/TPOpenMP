@@ -69,8 +69,8 @@ merge_array_impl(Input_Random_Access_Iterator_1 first_1,
   const size_type total = m + n;
 
   auto best_block_size = [&result, total](const int num_threads) -> size_type {
-    // À COMPLÉTER (la valeur retournée ici n'est pas la bonne).
-    return 0;
+    const size_type p = static_cast<size_type>(num_threads);
+    return (total + p - 1) / p;
   };
 
   // À COMPLÉTER.

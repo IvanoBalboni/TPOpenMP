@@ -3,6 +3,7 @@
 
 #include <omp.h>
 
+#include <cstddef>
 #include <cmath>
 #include <concepts>
 #include <iterator>
@@ -73,9 +74,26 @@ merge_array_impl(Input_Random_Access_Iterator_1 first_1,
     return (total + p - 1) / p;
   };
 
-  // À COMPLÉTER.
+  // Algo 1 SPMD
+  #pragma omp parallel
+  {
+    const size_type r = static_cast<size_type>(omp_get_thread_num());
+    const size_type block = best_block_size(omp_get_num_threads());
 
-  // Comportement classique de merge.
+    const size_type i_r = std::min(r * block, total);
+    const size_type i_r1 = std::min((r + 1) * block, total);
+
+    size_type j_r, k_r, j_r1, k_r1;
+    co_rank(i_r, first_1, m, first_2, n, comp, j_r, k_r);
+    co_rank(i_r1, first_1, m, first_2, n, comp, j_r1, k_r1);
+
+    // Fusion stable du fragment A[j_r, j_r1) et B[k_r, k_r1) dans C[i_r, i_r1).
+    std::merge(first_1 + static_cast<std::ptrdiff_t>(j_r),
+               first_1 + static_cast<std::ptrdiff_t>(j_r1),
+               first_2 + static_cast<std::ptrdiff_t>(k_r),
+               first_2 + static_cast<std::ptrdiff_t>(k_r1),
+               result + static_cast<std::ptrdiff_t>(i_r), comp);
+  }
   return result + total;
 }
 

@@ -1,0 +1,4 @@
+/home/balboni251/TPOpenMP/Squelette/CMakeFiles/omp_merge_array.dir
+/home/balboni251/TPOpenMP/Squelette/CMakeFiles/omp_merge_not_array.dir
+/home/balboni251/TPOpenMP/Squelette/CMakeFiles/edit_cache.dir
+/home/balboni251/TPOpenMP/Squelette/CMakeFiles/rebuild_cache.dir

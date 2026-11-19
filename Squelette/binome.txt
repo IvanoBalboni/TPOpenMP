@@ -1,1 +1,3 @@
 Nom, prénom et numéro étudiant.
+Rousseau Pierre-alexandre  21902963
+Balboni-Bouilly Ivano      22505414
